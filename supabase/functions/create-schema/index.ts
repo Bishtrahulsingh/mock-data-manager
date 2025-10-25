@@ -31,7 +31,7 @@ serve(async (req) => {
     const { name, description, schemaDefinition } = await req.json();
     const apiEndpoint = `${name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
 
-    const HF_API_KEY = process.env.HUGGINGFACEAPIKEY;
+    const HF_API_KEY = Deno.env.get('HUGGINGFACEAPIKEY');
     if (!HF_API_KEY) throw new Error('Missing HUGGINGFACE_API_KEY');
 
     const model = new HuggingFaceInference({
