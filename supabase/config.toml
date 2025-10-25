@@ -1,0 +1,7 @@
+project_id = "cazsiknipgkryrtwdxjx"
+
+[functions.create-schema]
+verify_jwt = true
+
+[functions.data-crud]
+verify_jwt = true

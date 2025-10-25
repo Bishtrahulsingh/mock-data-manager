@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 17% 7%;
+    --foreground: 213 31% 91%;
+    
+    --card: 221 23% 11%;
+    --card-foreground: 213 31% 91%;
+    
+    --popover: 221 23% 11%;
+    --popover-foreground: 213 31% 91%;
+    
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 221 23% 16%;
+    --secondary-foreground: 213 31% 91%;
+    
+    --muted: 221 23% 16%;
+    --muted-foreground: 213 13% 54%;
+    
+    --accent: 188 85% 51%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 221 23% 16%;
+    --input: 221 23% 16%;
+    --ring: 262 83% 58%;
+    
+    --radius: 0.5rem;
+    
+    --success: 142 76% 36%;
+    --warning: 38 92% 50%;
+    --info: 199 89% 48%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(262 83% 58%), hsl(188 85% 51%));
+    --gradient-dark: linear-gradient(180deg, hsl(220 17% 7%), hsl(221 23% 11%));
+    
+    --shadow-glow: 0 0 30px hsl(262 83% 58% / 0.3);
+    --shadow-card: 0 4px 6px -1px hsl(0 0% 0% / 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  code, pre {
+    font-family: 'Fira Code', monospace;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+  
+  h1 {
+    @apply text-4xl;
+  }
+  
+  h2 {
+    @apply text-3xl;
+  }
+  
+  h3 {
+    @apply text-2xl;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .card-glow {
+    box-shadow: var(--shadow-glow);
+  }
+}
