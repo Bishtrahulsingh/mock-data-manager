@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { Plus, LogOut, Database, Code2 } from "lucide-react";
+import { Plus, LogOut, Database } from "lucide-react";
 import SchemaList from "@/components/SchemaList";
 import CreateSchemaDialog from "@/components/CreateSchemaDialog";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -25,9 +26,7 @@ const Dashboard = () => {
       setLoading(false);
     });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         setUser(session.user);
       } else {
@@ -38,19 +37,21 @@ const Dashboard = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const handleSchemaCreated = useCallback(() => {
+    setCreateDialogOpen(false);
+    setRefreshKey((k) => k + 1);
+  }, []);
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    toast({
-      title: "Signed out",
-      description: "You have been successfully signed out.",
-    });
+    toast({ title: "Signed out", description: "You have been successfully signed out." });
     navigate("/auth");
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
       </div>
     );
   }
@@ -70,12 +71,9 @@ const Dashboard = () => {
                 <p className="text-sm text-muted-foreground">{user?.email}</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
-              <Button
-                onClick={() => setCreateDialogOpen(true)}
-                className="gap-2"
-              >
+              <Button onClick={() => setCreateDialogOpen(true)} className="gap-2">
                 <Plus className="w-4 h-4" />
                 New Schema
               </Button>
@@ -97,10 +95,14 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <SchemaList />
+        <SchemaList refreshKey={refreshKey} />
       </main>
 
-      <CreateSchemaDialog open={createDialogOpen} onOpenChange={setCreateDialogOpen} />
+      <CreateSchemaDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+        onSchemaCreated={handleSchemaCreated}
+      />
     </div>
   );
 };
